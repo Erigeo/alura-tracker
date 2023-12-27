@@ -4,6 +4,7 @@
         <h1>
             <img src="../assets/logo.png" alt="">
         </h1>
+        <button class=" button " @click="ativarModoNoturno"> {{ textoButton }}</button>
     </header>
 
 </template>
@@ -13,7 +14,28 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: 'BarraLateral'
+    name: 'BarraLateral',
+    emits: ['altereTema'],
+    data() {
+      return {
+        modoNoturno: false
+      }
+    },
+    computed: {
+      textoButton() {
+        if(this.modoNoturno){
+          return 'Desativar Dark Mode'
+        }else{
+          return 'Ativar Dark Mode'
+        }
+      }
+    } ,
+    methods: {
+      ativarModoNoturno() {
+        this.modoNoturno = !this.modoNoturno;
+        this.$emit('altereTema', this.modoNoturno );
+      }
+    }
 });
 
 </script>

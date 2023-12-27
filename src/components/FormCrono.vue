@@ -1,31 +1,10 @@
 <template>
-    <div class="box">
+    <div class="box formulario">
         <div class="columns">
             <div class="column is-8" aria-label="formulário para a criação de uma nova tarefa">
-                <input type="text" class="input" placeholder="Qual tarefa deseja iniciar?">
+                <input type="text" class="input" placeholder="Qual tarefa deseja iniciar?" v-model="descricao">
             </div>
-            <div class="column ">
-                <div class="is-flex is-align-items-center is-justify-content-space-between">
-                    <section>
-                        <strong>
-                            {{ tempoDecorrido }}
-                        </strong>
-                    </section>
-                    <button class="button" @click="iniciar">
-                        <span class="icon">
-                            <i class="fas fa-play"></i>
-                        </span>
-                        <span>play</span>
-                    </button>
-                    <button class="button" @click="finalizar">
-                        <span class="icon">
-                            <i class="fas fa-stop"></i>
-                        </span>
-                        <span>stop</span>
-                    </button>
-                </div>
-            </div>
-
+            <PainelTemporizador @AoFinalizarEvento="finalizarTarefa"/>
         </div>
     </div>
 </template>
@@ -33,29 +12,33 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
+import PainelTemporizador from './PainelTemporizador.vue';
 export default defineComponent({
     name: 'FormCrono',
-    data() {
+    data () {
         return {
-            tempoEmSegundos: 0,
-            cronometro: 0
+        descricao: ''
         }
     },
-    computed: {
-        tempoDecorrido () : string {
-            return new Date(this.tempoEmSegundos * 1000).toISOString().substr(11,8)
+    emits: ['AoFinalizarTarefa'],
+    components: { PainelTemporizador },
+    methods: {
+        finalizarTarefa(tempoDecorrido: number) : void {
+            this.$emit('AoFinalizarTarefa', {
+                duracaoEmSegundos: tempoDecorrido,
+                descricao: this.descricao
+            });
+            this.descricao = ''
         }
-    },
-    methods: {iniciar(){
-        console.log('iniciando');
-        this.cronometro = setInterval(() => {this.tempoEmSegundos += 1}, 1000)
-    },
-    finalizar(){
-        clearInterval(this.cronometro)
-
-    }}
+    }
 });
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.formulario {
+    background-color: var(--bg-primario);
+    color: var(--texto-primario);
+}
+
+</style>
