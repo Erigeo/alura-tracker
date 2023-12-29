@@ -3,16 +3,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BarraLateral from './components/BarraLateral.vue';
-import FormCrono from './components/FormCrono.vue';
-import TarefaDiff from './components/TarefaDiff.vue';
+
+
 import ITarefa from './Interface/ITarefa'
-import BoxT from './components/BoxT.vue';
+
 
 
 
 export default defineComponent({
     name: 'App',
-    components: { BarraLateral, FormCrono, TarefaDiff, BoxT },
+    components: { BarraLateral },
     data() {
       return {
         tarefas: [] as ITarefa[],
@@ -39,11 +39,7 @@ export default defineComponent({
       <BarraLateral @altere-tema="mudarTema"/>
     </div>
     <div class="column is-three-quarter conteudo">
-      <FormCrono @ao-finalizar-tarefa="salvar"/>
-      <div v-if="tarefas.length" class="lista">
-        <TarefaDiff v-for="(tarefa,index) in tarefas" :key="index" :tarefa="tarefa"/>
-      </div>
-      <BoxT v-else >Voce ainda nao produziu nada hoje</BoxT>
+      <RouterView> </RouterView>
     </div>
   </main>
  </template>
