@@ -4,7 +4,7 @@
             <div class="column is-5" aria-label="formulário para a criação de uma nova tarefa">
                 <input type="text" class="input" placeholder="Qual tarefa deseja iniciar?" v-model="descricao">
             </div>
-            <PainelTemporizador @AoFinalizarEvento="finalizarTarefa"/>
+            <PainelTemporizador @AoFinalizarEvento="salvarTarefa"/>
         </div>
         <div class="column is-3">
         <div class="select">
@@ -30,6 +30,7 @@ import PainelTemporizador from './PainelTemporizador.vue';
 import { computed } from "vue";
 import { useStore } from 'vuex'
 import {key} from '@/store'
+import { ADICIONAR_TAREFA } from '@/store/typeMutation';
 export default defineComponent({
     name: 'FormCrono',
     data () {
@@ -41,19 +42,21 @@ export default defineComponent({
     emits: ['AoFinalizarTarefa'],
     components: { PainelTemporizador },
     methods: {
-        finalizarTarefa(tempoDecorrido: number) : void {
-            this.$emit('AoFinalizarTarefa', {
+        salvarTarefa(tempoDecorrido: number){
+            this.store.commit(ADICIONAR_TAREFA, {
                 duracaoEmSegundos: tempoDecorrido,
                 descricao: this.descricao,
                 projeto: this.projetos.find(proj => proj.id == this.idProjeto)
-            });
+            })
             this.descricao = ''
         }
     },
     setup(){
         const store = useStore(key)
         return {
-            projetos: computed(() => store.state.projetos)
+            projetos: computed(() => store.state.projetos), 
+            tarefas: computed(() => store.state.tarefas), store
+            
         }
     }
 });
