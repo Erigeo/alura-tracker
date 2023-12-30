@@ -1,5 +1,7 @@
 import ProjetosPage from "@/views/ProjetosPage.vue";
 import Tarefas from "@/views/Tarefas.vue"
+import CreateProject from "@/views/ViewsProjeto/CreateProject.vue";
+import ListaProjeto from "@/views/ViewsProjeto/ListaProjeto.vue";
 import { RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router"
 
 const rotas: RouteRecordRaw[] = [{ 
@@ -7,9 +9,32 @@ const rotas: RouteRecordRaw[] = [{
     name: 'Tarefas',
     component: Tarefas,
     
-}, {path: '/projetospage',
-name: 'ProjetosPage',
-component: ProjetosPage}
+}, 
+{
+    path: '/projetos',
+    component: ProjetosPage,
+    children: [
+        {
+            path: '',
+            name: 'projetos',
+            component: ListaProjeto
+        },
+        
+        {
+            path: 'novo',
+            name: 'novo projeto',
+            component: CreateProject
+        },
+            {
+                path: ':id',
+                name: 'Editar projeto',
+                component: CreateProject,
+                props:true
+        }
+    ]
+},
+
+
 ]
 
 
