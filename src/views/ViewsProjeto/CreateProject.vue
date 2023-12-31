@@ -21,9 +21,9 @@
 
 import { TipoNotificacao } from '@/Interface/INotificacoes';
 import { useStore } from '@/store';
-import { EDITAR_PROJETO, ADICIONA_PROJETO, NOTIFICAR } from '@/store/typeMutation';
 import { defineComponent} from 'vue'
 import usenotificarHook from '@/hook/notificarHook'
+import { CADASTRAR_PROJETO, ALTERAR_PROJETO } from '@/store/typeActions';
 
 export default defineComponent({
     name: 'ProjetosPage',
@@ -48,18 +48,26 @@ export default defineComponent({
     methods: {
         salvar() {
             if(this.id){
-                this.store.commit(EDITAR_PROJETO,  {
+                this.store.dispatch(ALTERAR_PROJETO,  {
                     id: this.id,
                     nome: this.nomeDoProjeto
+                }) .then(()=> {
+                         this.notificar(TipoNotificacao.SUCESSO, 'Sucesso', 'seu projeto foi alterado' )
+                        this.nomeDoProjeto = '';
+                         this.$router.push('/projetos')
                 })
             }else{
-                this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto)
+                this.store.dispatch(CADASTRAR_PROJETO, this.nomeDoProjeto)
+                    .then(()=> {
+                        this.notificar(TipoNotificacao.SUCESSO, 'Sucesso', 'seu projeto foi criado' )
+                        this.nomeDoProjeto = '';
+                         this.$router.push('/projetos')
+
+                    })
                 
             }
             
-           this.notificar(TipoNotificacao.SUCESSO, 'Sucesso', 'seu projeto foi criado' )
-            this.nomeDoProjeto = '';
-            this.$router.push('/projetos')
+          
         }
     },
     setup(){

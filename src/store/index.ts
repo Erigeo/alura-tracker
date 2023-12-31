@@ -2,8 +2,10 @@ import IProjeto from "@/Interface/IProjeto";
 import ITarefas from "@/Interface/ITarefa";
 import { InjectionKey } from "vue";
 import { Store, createStore, useStore as vuexUseStore } from "vuex";
-import { NOTIFICAR, ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA } from "./typeMutation";
+import { NOTIFICAR, ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA, DEFINIR_PROJETOS } from "./typeMutation";
 import INotificacoes, { TipoNotificacao } from "@/Interface/INotificacoes";
+import { ALTERAR_PROJETO, CADASTRAR_PROJETO, OBTER_PROJETOS, REMOVER_PROJETO } from "./typeActions";
+import http from '@/http'
 
 
 
@@ -63,8 +65,32 @@ export const store = createStore<estado>({
             setTimeout(()=> { 
                 state.notificacoes = state.notificacoes.filter((noti)=> noti.id != newNotificacao.id)
             }, 3000)
+        },
+        [DEFINIR_PROJETOS] (state, projetos: IProjeto[] ){
+            state.projetos = projetos
         }
-    }})
+    },
+    actions: {
+    [OBTER_PROJETOS] ({commit}) {
+        http.get('projetos')
+            .then(resposta => commit(DEFINIR_PROJETOS, resposta.data))
+    },
+    [CADASTRAR_PROJETO] (contexto, nomeDoProjeto : string){
+        return http.post('/projetos', {
+            nome: nomeDoProjeto,
+            id: new Date().toISOString()
+        })
+    },
+    [ALTERAR_PROJETO] ( contexto, projeto: IProjeto){
+        return http.put(`/projetos/${projeto.id}`, projeto)
+    },
+    [REMOVER_PROJETO] ({commit}, id : string){
+        return http.delete(`/projetos/${id}`)
+            .then(()=> commit(EXCLUIR_PROJETO, id))
+            //se faz o sincronismo com o que vem da api com o estado local
+    }
+    }
+})
 
 export function useStore(): Store<estado> {
     return vuexUseStore(key)
