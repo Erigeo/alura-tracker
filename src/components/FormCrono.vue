@@ -30,7 +30,8 @@ import PainelTemporizador from './PainelTemporizador.vue';
 import { computed } from "vue";
 import { useStore } from 'vuex'
 import {key} from '@/store'
-import { ADICIONAR_TAREFA } from '@/store/typeMutation';
+import { ADICIONAR_TAREFA, NOTIFICAR} from '@/store/typeMutation';
+import { TipoNotificacao } from '@/Interface/INotificacoes';
 export default defineComponent({
     name: 'FormCrono',
     data () {
@@ -43,19 +44,27 @@ export default defineComponent({
     components: { PainelTemporizador },
     methods: {
         salvarTarefa(tempoDecorrido: number){
-            this.store.commit(ADICIONAR_TAREFA, {
+            if(this.idProjeto == ''){
+                this.store.commit(NOTIFICAR, {
+                    titulo: 'Erro', texto: 'Percebemos que um projeto não foi selecionado', tipo: TipoNotificacao.FALHA
+                })
+            }else{
+                this.store.commit(ADICIONAR_TAREFA, {
                 duracaoEmSegundos: tempoDecorrido,
                 descricao: this.descricao,
                 projeto: this.projetos.find(proj => proj.id == this.idProjeto)
             })
             this.descricao = ''
+
+            }
+            
         }
     },
     setup(){
         const store = useStore(key)
         return {
             projetos: computed(() => store.state.projetos), 
-            tarefas: computed(() => store.state.tarefas), store
+            tarefas: computed(() => store.state.tarefas), store,
             
         }
     }

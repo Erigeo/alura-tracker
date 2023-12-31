@@ -2,13 +2,15 @@ import IProjeto from "@/Interface/IProjeto";
 import ITarefas from "@/Interface/ITarefa";
 import { InjectionKey } from "vue";
 import { Store, createStore, useStore as vuexUseStore } from "vuex";
-import { ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA } from "./typeMutation";
+import { NOTIFICAR, ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA } from "./typeMutation";
+import INotificacoes, { TipoNotificacao } from "@/Interface/INotificacoes";
 
 
 
 interface estado {
-    projetos: IProjeto[];
-    tarefas: ITarefas[];
+    projetos: IProjeto[],
+    tarefas: ITarefas[],
+    notificacoes: INotificacoes[]
 }
 
 export const key: InjectionKey<Store<estado>> = Symbol()
@@ -18,8 +20,10 @@ export const store = createStore<estado>({
         projetos: [
 
         ],
-        tarefas: [
+        tarefas: [ 
 
+        ],
+        notificacoes: [ 
         ]
     },
     mutations: {
@@ -52,6 +56,14 @@ export const store = createStore<estado>({
             const index = state.tarefas.findIndex(taref => taref.id == id)
             state.tarefas.splice(index, 1)
         },
+        [NOTIFICAR](state, newNotificacao : INotificacoes){
+           newNotificacao.id = new Date().getTime(),
+            state.notificacoes.push(newNotificacao)
+
+            setTimeout(()=> { 
+                state.notificacoes = state.notificacoes.filter((noti)=> noti.id != newNotificacao.id)
+            }, 3000)
+        }
     }})
 
 export function useStore(): Store<estado> {

@@ -1,16 +1,32 @@
+<template>
+  <main class="columns is-gapless is-multiline" :class="{'modo-escuro': modoAtivo}">
+    <div class="column is-one-quarter">
+      <BarraLateral @altere-tema="mudarTema"/>
+    </div>
+    <div class="column is-three-quarter conteudo">
+     <NotificacoesTracker/>
+      <RouterView> </RouterView>
+    </div>
+  </main>
+ </template>
+
+
+
+
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BarraLateral from './components/BarraLateral.vue';
+import NotificacoesTracker from './components/NotificacoesTracker.vue'
+import ITarefa from './Interface/ITarefa';
 
-
-import ITarefa from './Interface/ITarefa'
 
 
 
 
 export default defineComponent({
     name: 'App',
-    components: { BarraLateral },
+    components: { BarraLateral, NotificacoesTracker},
     data() {
       return {
         tarefas: [] as ITarefa[],
@@ -31,16 +47,6 @@ export default defineComponent({
 </script>
 
 
-<template>
-  <main class="columns is-gapless is-multiline" :class="{'modo-escuro': modoAtivo}">
-    <div class="column is-one-quarter">
-      <BarraLateral @altere-tema="mudarTema"/>
-    </div>
-    <div class="column is-three-quarter conteudo">
-      <RouterView> </RouterView>
-    </div>
-  </main>
- </template>
 
 
 <style>
