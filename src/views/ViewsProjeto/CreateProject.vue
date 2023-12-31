@@ -23,7 +23,7 @@ import { TipoNotificacao } from '@/Interface/INotificacoes';
 import { useStore } from '@/store';
 import { EDITAR_PROJETO, ADICIONA_PROJETO, NOTIFICAR } from '@/store/typeMutation';
 import { defineComponent} from 'vue'
-import { notificarMixin } from '@/mixins/notificarMixin'
+import usenotificarHook from '@/hook/notificarHook'
 
 export default defineComponent({
     name: 'ProjetosPage',
@@ -43,7 +43,7 @@ export default defineComponent({
             this.nomeDoProjeto = projeto?.nome || ''
         }
     },
-    mixins: [notificarMixin],
+    
 
     methods: {
         salvar() {
@@ -57,15 +57,16 @@ export default defineComponent({
                 
             }
             
-           this.notificar('Sucesso', 'seu projeto foi criado', TipoNotificacao.SUCESSO )
+           this.notificar(TipoNotificacao.SUCESSO, 'Sucesso', 'seu projeto foi criado' )
             this.nomeDoProjeto = '';
             this.$router.push('/projetos')
         }
     },
     setup(){
         const store = useStore() 
+        const {notificar} = usenotificarHook();
         return {
-            store,
+            store, notificar
             
         }
     }
