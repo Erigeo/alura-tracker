@@ -14,23 +14,26 @@
   <BoxT v-else>Voce ainda nao produziu nada hoje</BoxT>
 
 <ModalExibir :mostrar="tarefaSelecionada != null" v-if="tarefaSelecionada != null">
-  <header class="modal-card-head">
+  <template v-slot:cabecalho>
         <p class="modal-card-title">Modal title</p>
         <button class="delete" aria-label="close"></button>
-      </header>
-      <section class="modal-card-body">
+      </template>
+
+      <template v-slot:corpo>
         <div class="field">
           <label for="nomeProjeto" class="label">
             Nome do projeto
           </label>
           <input type="text" class="input" v-model="tarefaSelecionada.descricao" />
         </div>
-      </section>
-      <footer class="modal-card-foot">
+      </template>
+
+       <template v-slot:rodape>
         <button class="button is-success" @click="editarTarefa(tarefaSelecionada)">Save changes</button>
         <button class="button" @click="cancelarModal">Cancel</button>
-      </footer>
-</ModalExibir>/>
+       </template>
+
+      </ModalExibir>
   
 </template>
 
