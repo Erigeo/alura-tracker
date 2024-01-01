@@ -21,7 +21,7 @@
 
 import { TipoNotificacao } from '@/Interface/INotificacoes';
 import { useStore } from '@/store';
-import { defineComponent} from 'vue'
+import { defineComponent, ref} from 'vue'
 import usenotificarHook from '@/hook/notificarHook'
 import { CADASTRAR_PROJETO, ALTERAR_PROJETO } from '@/store/typeActions';
 
@@ -32,18 +32,6 @@ export default defineComponent({
             type: String
         },
     },
-    data() {
-        return {
-            nomeDoProjeto: '',
-        }
-    },
-    mounted(){
-        if(this.id){
-            const projeto = this.store.state.projeto.projetos.find(proj => proj.id == this.id);
-            this.nomeDoProjeto = projeto?.nome || ''
-        }
-    },
-    
 
     methods: {
         salvar() {
@@ -70,14 +58,23 @@ export default defineComponent({
           
         }
     },
-    setup(){
+    setup(props){
         const store = useStore() 
         const {notificar} = usenotificarHook();
+        const nomeDoProjeto = ref("")
+
+        if(props.id){
+            const projeto = store.state.projeto.projetos.find(
+                (proj) => proj.id == props.id
+            );
+            nomeDoProjeto.value = projeto?.nome || " ";
+        }
         return {
-            store, notificar
+            store, notificar, nomeDoProjeto
             
         }
     }
+    
 
 })
 
