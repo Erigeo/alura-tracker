@@ -2,9 +2,9 @@ import IProjeto from "@/Interface/IProjeto";
 import ITarefas from "@/Interface/ITarefa";
 import { InjectionKey } from "vue";
 import { Store, createStore, useStore as vuexUseStore } from "vuex";
-import { NOTIFICAR, ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA, DEFINIR_PROJETOS } from "./typeMutation";
+import { NOTIFICAR, ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA, DEFINIR_PROJETOS, DEFINIR_TAREFAS } from "./typeMutation";
 import INotificacoes, { TipoNotificacao } from "@/Interface/INotificacoes";
-import { ALTERAR_PROJETO, CADASTRAR_PROJETO, OBTER_PROJETOS, REMOVER_PROJETO } from "./typeActions";
+import { ALTERAR_PROJETO, ALTERAR_TAREFA, CADASTRAR_PROJETO, CADASTRAR_TAREFA, OBTER_PROJETOS, OBTER_TAREFAS, REMOVER_PROJETO } from "./typeActions";
 import http from '@/http'
 
 
@@ -68,7 +68,11 @@ export const store = createStore<estado>({
         },
         [DEFINIR_PROJETOS] (state, projetos: IProjeto[] ){
             state.projetos = projetos
-        }
+        },
+        [DEFINIR_TAREFAS] (state, tarefas: ITarefas[] ){
+            state.tarefas = tarefas
+        },
+
     },
     actions: {
     [OBTER_PROJETOS] ({commit}) {
@@ -88,7 +92,21 @@ export const store = createStore<estado>({
         return http.delete(`/projetos/${id}`)
             .then(()=> commit(EXCLUIR_PROJETO, id))
             //se faz o sincronismo com o que vem da api com o estado local
-    }
+    },
+    [OBTER_TAREFAS] ({commit}) {
+        http.get('tarefas')
+            .then(resposta => commit(DEFINIR_TAREFAS, resposta.data))
+    },
+    [CADASTRAR_TAREFA] ({commit}, tarefa : ITarefas){
+        return http.post('/tarefas', tarefa)
+            .then(resposta => commit(ADICIONAR_TAREFA, resposta.data))
+            //diferente do cadastrar projeto, aqui precisamos adicionar no array 
+            //local, pq é a partir dele que as operacoes sao feitas!
+    },
+    [ALTERAR_TAREFA] ( {commit}, tarefa: ITarefas){
+        return http.put(`/tarefas/${tarefa.id}`, tarefa)
+            .then(resposta => commit(EDITAR_TAREFA, resposta.data))
+    },
     }
 })
 

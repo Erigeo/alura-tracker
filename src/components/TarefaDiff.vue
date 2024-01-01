@@ -1,5 +1,5 @@
 <template>
-    <BoxT>
+    <BoxT class="pointer" @click="tarefaClicada()">
         <div class="columns">
             <div class="column is-4">
                 {{ tarefa.descricao || 'Sem descricao...'}}
@@ -37,9 +37,15 @@ export default defineComponent({
             type: Object as PropType<ITarefa>, required: true
         }
     },
+    emits: ['tarefaFoiClicada']
+    ,
+
     methods: {
         excluir(id : string){
         this.store.commit(EXCLUIR_TAREFA, id)
+        },
+        tarefaClicada() : void {
+            this.$emit('tarefaFoiClicada', this.tarefa)
         }
     },
     setup() {
@@ -54,5 +60,8 @@ export default defineComponent({
 
 
 <style scoped>
+.pointer {
+    cursor: pointer;
+}
 
 </style>

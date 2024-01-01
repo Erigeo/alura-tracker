@@ -2,15 +2,45 @@
   "projetos": [
     {
       "id": 1,
-      "nome": "Alura Tracker"
-    },
-    {
-      "nome": "ok",
-      "id": "2023-12-31T06:09:15.333Z"
+      "duracaoEmSegundos": 120,
+      "descricao": "teste5",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker"
+      }
     },
     {
       "id": "2023-12-31T06:32:28.465Z",
       "nome": "teste1"
+    }
+  ],
+  "tarefas": [
+    {
+      "id": 1,
+      "duracaoEmSegundos": 120,
+      "descricao": "teste10",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker"
+      }
+    },
+    {
+      "id": "2023-12-31T23:04:49.891Z",
+      "duracaoEmSegundos": 1,
+      "descricao": "teste1",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker"
+      }
+    },
+    {
+      "id": "2023-12-31T23:07:31.574Z",
+      "duracaoEmSegundos": 3,
+      "descricao": "uhh",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker"
+      }
     }
   ]
 }
