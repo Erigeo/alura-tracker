@@ -6,45 +6,31 @@ import { NOTIFICAR, ADICIONAR_TAREFA, ADICIONA_PROJETO, EDITAR_PROJETO, EDITAR_T
 import INotificacoes, { TipoNotificacao } from "@/Interface/INotificacoes";
 import { ALTERAR_PROJETO, ALTERAR_TAREFA, CADASTRAR_PROJETO, CADASTRAR_TAREFA, OBTER_PROJETOS, OBTER_TAREFAS, REMOVER_PROJETO } from "./typeActions";
 import http from '@/http'
+import { EstadoProjeto, projeto } from "./modulo/projeto";
 
 
 
-interface estado {
-    projetos: IProjeto[],
+export interface estado {
     tarefas: ITarefas[],
-    notificacoes: INotificacoes[]
+    notificacoes: INotificacoes[],
+    projeto: EstadoProjeto
 }
 
 export const key: InjectionKey<Store<estado>> = Symbol()
 
 export const store = createStore<estado>({
     state: {
-        projetos: [
-
-        ],
         tarefas: [ 
 
         ],
         notificacoes: [ 
-        ]
+        ],
+        projeto: {
+            projetos: []
+        }
     },
     mutations: {
-        [ADICIONA_PROJETO](state, nomeDoProjeto: string) {
-            const projeto = {
-                id: new Date().toISOString(),
-                nome: nomeDoProjeto
-            } as IProjeto
-            state.projetos.push(projeto)
-        },
-        [EDITAR_PROJETO](state, projeto: IProjeto) {
-            const index = state.projetos.findIndex(proj => proj.id == projeto.id)
-            state.projetos[index] = projeto
-
-        },
-        [EXCLUIR_PROJETO](state, id: string) {
-            const index = state.projetos.findIndex(proj => proj.id == id)
-            state.projetos.splice(index, 1)
-        },
+        
         [ADICIONAR_TAREFA](state, tarefa: ITarefas) {
             tarefa.id = new Date().toISOString();
             state.tarefas.push(tarefa)
@@ -66,33 +52,14 @@ export const store = createStore<estado>({
                 state.notificacoes = state.notificacoes.filter((noti)=> noti.id != newNotificacao.id)
             }, 3000)
         },
-        [DEFINIR_PROJETOS] (state, projetos: IProjeto[] ){
-            state.projetos = projetos
-        },
+        
         [DEFINIR_TAREFAS] (state, tarefas: ITarefas[] ){
             state.tarefas = tarefas
         },
 
     },
     actions: {
-    [OBTER_PROJETOS] ({commit}) {
-        http.get('projetos')
-            .then(resposta => commit(DEFINIR_PROJETOS, resposta.data))
-    },
-    [CADASTRAR_PROJETO] (contexto, nomeDoProjeto : string){
-        return http.post('/projetos', {
-            nome: nomeDoProjeto,
-            id: new Date().toISOString()
-        })
-    },
-    [ALTERAR_PROJETO] ( contexto, projeto: IProjeto){
-        return http.put(`/projetos/${projeto.id}`, projeto)
-    },
-    [REMOVER_PROJETO] ({commit}, id : string){
-        return http.delete(`/projetos/${id}`)
-            .then(()=> commit(EXCLUIR_PROJETO, id))
-            //se faz o sincronismo com o que vem da api com o estado local
-    },
+    
     [OBTER_TAREFAS] ({commit}) {
         http.get('tarefas')
             .then(resposta => commit(DEFINIR_TAREFAS, resposta.data))
@@ -107,6 +74,9 @@ export const store = createStore<estado>({
         return http.put(`/tarefas/${tarefa.id}`, tarefa)
             .then(resposta => commit(EDITAR_TAREFA, resposta.data))
     },
+    },
+    modules: {
+        projeto
     }
 })
 

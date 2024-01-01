@@ -69,7 +69,7 @@ export default defineComponent({
         store.dispatch(OBTER_PROJETOS) //aqui se usa dispatch em vez do commit
         
         return {
-            projetos: computed(() => store.state.projetos), store,
+            projetos: computed(() => store.state.projeto.projetos), store,
         }
     }
 
