@@ -1,11 +1,20 @@
 <template>
   
   <FormCrono/>
+  <div class="field">
+  <p class="control has-icons-left has-icons-right">
+    <input class="input" type="text" placeholder="Digie para filtrar" v-model="filtro">
+    <span class="icon is-small is-left">
+      <i class="fas fa-search"></i>
+    </span>
+  </p>
+</div>
   <div v-if="tarefas.length" class="lista">
     <TarefaDiff v-for="(tarefa,index) in tarefas" :key="index" :tarefa="tarefa" @tarefa-foi-clicada="abrirModal"/>
   </div>
-
   <BoxT v-else >Voce ainda nao produziu nada hoje</BoxT>
+ 
+
   <div class="modal" :class="{'is-active': tarefaSelecionada }" v-if="tarefaSelecionada">
   <div class="modal-background" @click="cancelarModal"></div>
   <div class="modal-card">
@@ -38,7 +47,7 @@
 
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import FormCrono from '../components/FormCrono.vue';
 import TarefaDiff from '../components/TarefaDiff.vue';
 import BoxT from '../components/BoxT.vue';
@@ -54,7 +63,7 @@ export default defineComponent({
     components: {  FormCrono, TarefaDiff, BoxT },
     data(){
       return {
-        tarefaSelecionada: null as ITarefa | null
+        tarefaSelecionada: null as ITarefa | null,
       }
     },
     methods: {
@@ -74,8 +83,15 @@ export default defineComponent({
       const store = useStore()
       store.dispatch(OBTER_PROJETOS)
       store.dispatch(OBTER_TAREFAS)
+      const filtro = ref("")
+
+      const tarefas = computed(() => store.state.tarefas.filter(t => t.descricao.includes(filtro.value) || !filtro.value))
+
+
+
+
         return {
-            tarefas: computed(() => store.state.tarefas), store
+            tarefas, store, filtro
         }
     }
 });
